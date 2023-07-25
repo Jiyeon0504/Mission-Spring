@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board.dao.BoardDAO">
+
+	<select id="selectAllBoard" resultType="boardVO">
+<!-- 	select no, title, writer, to_char(reg_date, 'yyyy-mm-dd') regDate
+	from t_board
+	order by no desc -->
+	
+	 select no, title, writer, to_char(reg_date, 'yyyy-mm-dd') regdate
+ ,(select count(*)
+ from t_reply
+ where board_no = b.no
+ ) as replyCnt
+ from t_board b
+ order by no desc
+	</select>
+	
+	
+	<select id="selectBoardByNo" parameterType="int" resultType="boardVO">
+	
+	
+	select no, title, writer, content, view_cnt viewCnt, to_char(reg_date, 'yyyy-mm-dd') regDate
+	from t_board
+	where no = #{no}
+	
+	</select>
+	
+	<!-- 새글등록 -->
+	<insert id="insertBoard" parameterType="boardVO">
+	insert into t_board(no, title, writer, content)
+	values(Seq_t_board_no.nextval, #{title}, #{writer}, #{content})
+	
+	</insert>	
+	
+</mapper>
